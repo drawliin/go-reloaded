@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"project1/helpers"
 )
 
 func main() {
@@ -16,5 +17,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Print(string(file))
+	fmt.Print(helper.ToUpper(string(file)))
 }
