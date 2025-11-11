@@ -1,26 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	helper "project1/helpers"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		panic("No Args")
+	if len(os.Args) != 3 {
+		fmt.Println("Invalid Args")
+		return
 	}
-	inputF := os.Args[1]
 
-	data, err := os.ReadFile(inputF)
+	inputFile, err := os.ReadFile(os.Args[1]) //return a slice of bytes
+	if err != nil {
+		fmt.Printf("%s File Not Found", os.Args[1])
+		return
+	}
+	output := helper.ParseString(string(inputFile))
+	file, err := os.Create(os.Args[2])
 	if err != nil {
 		panic(err)
 	}
-	outputF, err := os.Create("result.txt")
-	if err != nil {
-		panic(err)
-	}
-	_, err = outputF.WriteString(helper.ToUpper(string(data)))
-	if err != nil {
-		panic(err)
-	}
+	file.WriteString(output)
 }
