@@ -3,11 +3,10 @@ package helper
 import (
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 func ParseString(s string) string {
-	arrS := strings.Split(s, " ")
+	arrS := Split(s)
 	for i := 0; i < len(arrS); i++ {
 		hex, bin, cap, low, up := checkMod(arrS[i])
 		if hex {
@@ -85,4 +84,34 @@ func Join(slice []string) string {
 		}
 	}
 	return output
+}
+
+func Split(s string) []string {
+	arr := []string{}
+	wordStart := 0
+	for i := 0; i < len(s); {
+		if s[i] == ' ' {
+			if s[wordStart:i] != "" {
+				arr = append(arr, s[wordStart:i])
+			}
+			wordStart = i + 1
+			i = wordStart
+		} else if s[i] == '(' {
+			for i+1 < len(s) {
+				i++
+				if s[i] == ')' {
+					arr = append(arr, s[wordStart:i+1])
+					wordStart = i + 2
+					i = wordStart
+					break
+				}
+			}
+		} else {
+			i++
+		}
+	}
+	if s[wordStart:] != "" {
+		arr = append(arr, s[wordStart:])
+	}
+	return arr
 }
