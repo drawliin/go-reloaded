@@ -3,31 +3,26 @@ package helper
 import (
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func ParseString(s string) string {
 	arrS := Split(s)
 	for i := 0; i < len(arrS); i++ {
+		if i == 0 || isMod(arrS[i-1]) {
+			continue
+		}
 		hex, bin, cap, low, up := checkMod(arrS[i])
 		if hex {
 			arrS[i-1] = Hex(arrS[i-1])
 		} else if bin {
 			arrS[i-1] = Bin(arrS[i-1])
 		} else if cap {
-			count := parseMod(arrS[i])
-			for j := 1; j <= count; j++ {
-				arrS[i-j] = Capitalize(arrS[i-j])
-			}
+			ApplyMod(arrS, i, parseMod(arrS[i]), Capitalize)
 		} else if low {
-			count := parseMod(arrS[i])
-			for j := 1; j <= count; j++ {
-				arrS[i-j] = Lower(arrS[i-j])
-			}
+			ApplyMod(arrS, i, parseMod(arrS[i]), Lower)
 		} else if up {
-			count := parseMod(arrS[i])
-			for j := 1; j <= count; j++ {
-				arrS[i-j] = Upper(arrS[i-j])
-			}
+			ApplyMod(arrS, i, parseMod(arrS[i]), Upper)
 		}
 	}
 	return Join(arrS)
@@ -68,22 +63,27 @@ func checkMod(s string) (bool, bool, bool, bool, bool) {
 
 func isMod(s string) bool {
 	re1 := regexp.MustCompile(`^\((low|cap|up)(,\s*\d+)?\)$`)
-	re2 := regexp.MustCompile(`^\(hex|bin\)$`)
+	re2 := regexp.MustCompile(`^\((hex|bin)\)$`)
 	return re1.MatchString(s) || re2.MatchString(s)
 }
 
+func ApplyMod(arrS []string, i, count int, fn func(string) string) {
+	if count > i {
+		count = i
+	}
+	for j := 1; j <= count; j++ {
+		arrS[i-j] = fn(arrS[i-j])
+	}
+}
+
 func Join(slice []string) string {
-	output := ""
-	for i, str := range slice {
-		if isMod(str) {
-			continue
-		}
-		output += str
-		if i != len(slice)-1 {
-			output += " "
+	out := []string{}
+	for _, str := range slice {
+		if !isMod(str) {
+			out = append(out, str)
 		}
 	}
-	return output
+	return strings.Join(out, " ")
 }
 
 func Split(s string) []string {
