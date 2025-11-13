@@ -1,9 +1,9 @@
 package helper
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 func ParseString(s string) string {
@@ -78,12 +78,22 @@ func ApplyMod(arrS []string, i, count int, fn func(string) string) {
 
 func Join(slice []string) string {
 	out := []string{}
+	result := ""
 	for _, str := range slice {
 		if !isMod(str) {
 			out = append(out, str)
 		}
 	}
-	return strings.Join(out, " ")
+	for i, str := range out {
+		if isPunctuation(str) && puncAlone(str) {
+			result = result[:len(result)-1]
+		}
+		result += str
+		if i != len(out)-1 {
+			result += " "
+		}
+	}
+	return result
 }
 
 func Split(s string) []string {
@@ -92,6 +102,7 @@ func Split(s string) []string {
 	for i := 0; i < len(s); {
 		if s[i] == ' ' {
 			if s[wordStart:i] != "" {
+				fmt.Println(s[wordStart:i], i) ///////////
 				arr = append(arr, s[wordStart:i])
 			}
 			wordStart = i + 1
@@ -100,9 +111,35 @@ func Split(s string) []string {
 			for i+1 < len(s) {
 				i++
 				if s[i] == ')' {
+					fmt.Println(s[wordStart : i+1]) ///////////
 					arr = append(arr, s[wordStart:i+1])
-					wordStart = i + 2
+					wordStart = i + 1
 					i = wordStart
+					break
+				}
+			}
+		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' {
+			fmt.Println(s[wordStart : i+1]) ///////////
+			arr = append(arr, s[wordStart:i+1])
+			wordStart = i + 1
+			i = wordStart
+		} else if s[i] == '.' && i < len(s)-1 {
+			for i+1 < len(s) {
+				i++
+				if s[i] != '.' {
+					fmt.Println(s[wordStart:i], i) ///////////
+					arr = append(arr, s[wordStart:i])
+					wordStart = i
+					break
+				}
+			}
+		} else if (s[i] == '!' || s[i] == '?') && i < len(s)-1 {
+			for i+1 < len(s) {
+				i++
+				if s[i] != '!' && s[i] != '?' {
+					fmt.Println(s[wordStart:i], i) ///////////
+					arr = append(arr, s[wordStart:i])
+					wordStart = i
 					break
 				}
 			}
@@ -110,8 +147,28 @@ func Split(s string) []string {
 			i++
 		}
 	}
-	if s[wordStart:] != "" {
+	if wordStart < len(s) {
+		fmt.Println(s[wordStart:]) //////////
 		arr = append(arr, s[wordStart:])
 	}
 	return arr
+}
+
+func isPunctuation(s string) bool {
+	switch s[len(s)-1] {
+	case ',', '.', ':', ';', '!', '?':
+		return true
+	default:
+		return false
+	}
+
+}
+
+func puncAlone(s string) bool {
+	for _, c := range s {
+		if !isPunctuation(string(c)) {
+			return false
+		}
+	}
+	return true
 }
