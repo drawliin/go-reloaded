@@ -78,17 +78,22 @@ func ApplyMod(arrS []string, i, count int, fn func(string) string) {
 func Join(slice []string) string {
 	out := []string{}
 	result := ""
-	for _, str := range slice {
-		if !isMod(str) {
-			out = append(out, str)
+
+	for i := 0; i < len(slice); i++ {
+		if !isMod(slice[i]) {
+			if i != len(slice)-1 && Lower(slice[i]) == "a" && startWithVowel(Lower(slice[i+1])) {
+				slice[i] = slice[i]+"n"
+			}
+			out = append(out, slice[i])
 		}
 	}
+
 	for i, str := range out {
 		if isPunctuation(str) && puncAlone(str) {
 			result = result[:len(result)-1]
 		}
 		result += str
-		if i != len(out)-1 && str != "'" && containQuote(out[i+1]){
+		if i != len(out)-1 && str != "'" && !containQuote(out[i+1]) {
 			result += " "
 		}
 	}
@@ -167,10 +172,20 @@ func puncAlone(s string) bool {
 }
 
 func containQuote(s string) bool {
-	for _,c := range s {
+	for _, c := range s {
 		if c == '\'' {
 			return true
 		}
 	}
-		return false
+	return false
+}
+
+func startWithVowel(s string) bool {
+	vowels := []byte{'a', 'e', 'i', 'o', 'u', 'h'}
+	for _, c := range vowels {
+		if c == s[0] {
+			return true
+		}
+	}
+	return false
 }
