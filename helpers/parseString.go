@@ -1,7 +1,6 @@
 package helper
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -89,7 +88,7 @@ func Join(slice []string) string {
 			result = result[:len(result)-1]
 		}
 		result += str
-		if i != len(out)-1 {
+		if i != len(out)-1 && str != "'" && containQuote(out[i+1]){
 			result += " "
 		}
 	}
@@ -102,7 +101,6 @@ func Split(s string) []string {
 	for i := 0; i < len(s); {
 		if s[i] == ' ' {
 			if s[wordStart:i] != "" {
-				fmt.Println(s[wordStart:i], i) ///////////
 				arr = append(arr, s[wordStart:i])
 			}
 			wordStart = i + 1
@@ -111,7 +109,6 @@ func Split(s string) []string {
 			for i+1 < len(s) {
 				i++
 				if s[i] == ')' {
-					fmt.Println(s[wordStart : i+1]) ///////////
 					arr = append(arr, s[wordStart:i+1])
 					wordStart = i + 1
 					i = wordStart
@@ -119,7 +116,6 @@ func Split(s string) []string {
 				}
 			}
 		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' {
-			fmt.Println(s[wordStart : i+1]) ///////////
 			arr = append(arr, s[wordStart:i+1])
 			wordStart = i + 1
 			i = wordStart
@@ -127,7 +123,6 @@ func Split(s string) []string {
 			for i+1 < len(s) {
 				i++
 				if s[i] != '.' {
-					fmt.Println(s[wordStart:i], i) ///////////
 					arr = append(arr, s[wordStart:i])
 					wordStart = i
 					break
@@ -137,7 +132,6 @@ func Split(s string) []string {
 			for i+1 < len(s) {
 				i++
 				if s[i] != '!' && s[i] != '?' {
-					fmt.Println(s[wordStart:i], i) ///////////
 					arr = append(arr, s[wordStart:i])
 					wordStart = i
 					break
@@ -148,7 +142,6 @@ func Split(s string) []string {
 		}
 	}
 	if wordStart < len(s) {
-		fmt.Println(s[wordStart:]) //////////
 		arr = append(arr, s[wordStart:])
 	}
 	return arr
@@ -171,4 +164,13 @@ func puncAlone(s string) bool {
 		}
 	}
 	return true
+}
+
+func containQuote(s string) bool {
+	for _,c := range s {
+		if c == '\'' {
+			return true
+		}
+	}
+		return false
 }
