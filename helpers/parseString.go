@@ -100,17 +100,31 @@ func Join(slice []string) string {
 	}
 	foundSingleQuote := 0
 	for i, str := range out {
-		if isPunctuation(str) && puncAlone(str) && i > 0 && !isPunctuation(out[i-1]) {
+		
+		if isPunctuation(str) &&
+		puncAlone(str) &&
+		i > 0 &&
+		!isPunctuation(out[i-1]) {
 			result = result[:len(result)-1]
 		}
-		if str == "'" {
+		
+		result += str + " "
+		
+		if strings.Contains(str, "'") {
 			foundSingleQuote++
 		}
 
-		result += str + " "
-		if i == len(out)-1 || foundSingleQuote == 1 && (strings.Contains(out[i+1], "'") || str == "'") {
-			result = result[:len(result)-1]
+		if foundSingleQuote == 1 {
+			if strings.Contains(str, "'") {
+				if quoteAtTheEnd(str) {
+					result = result[:len(result)-1]
+				}
+			}
+			if !strings.Contains(str, "'") && strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
+				result = result[:len(result)-1]
+			}
 		}
+
 		if foundSingleQuote == 2 {
 			foundSingleQuote = 0
 		}
@@ -142,7 +156,7 @@ func Split(s string) []string {
 					break
 				}
 			}
-		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' {
+		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' || s[i] == '\'' {
 			arr = append(arr, s[wordStart:i+1])
 			wordStart = i + 1
 			i = wordStart
@@ -208,6 +222,13 @@ func startWithVowel(s string) bool {
 		if c == s[0] {
 			return true
 		}
+	}
+	return false
+}
+
+func quoteAtTheEnd(s string) bool {
+	if s[len(s)-1] == '\'' {
+		return true
 	}
 	return false
 }
