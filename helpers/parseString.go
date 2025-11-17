@@ -1,30 +1,40 @@
 package helper
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func ParseString(s string) string {
 	arrS := Split(s)
+	fmt.Printf("%qv\n", arrS) ///////////////
+	stack := []string{}
 	for i := 0; i < len(arrS); i++ {
-		if i == 0 || isMod(arrS[i-1]) {
+		if i == 0 && isMod(arrS[i]) {
 			continue
+		}
+		if !isMod(arrS[i]) {
+			stack = append(stack, arrS[i])
 		}
 		hex, bin, cap, low, up := checkMod(arrS[i])
 		if hex {
-			arrS[i-1] = Hex(arrS[i-1])
+			end := len(stack) - 1
+			stack[end] = Hex(stack[end])
 		} else if bin {
-			arrS[i-1] = Bin(arrS[i-1])
+			end := len(stack) - 1
+			stack[end] = Bin(stack[end])
 		} else if cap {
-			ApplyMod(arrS, i, parseMod(arrS[i]), Capitalize)
+			ApplyMod(stack, parseMod(arrS[i]), Capitalize)
 		} else if low {
-			ApplyMod(arrS, i, parseMod(arrS[i]), Lower)
+			ApplyMod(stack, parseMod(arrS[i]), Lower)
 		} else if up {
-			ApplyMod(arrS, i, parseMod(arrS[i]), Upper)
+			ApplyMod(stack, parseMod(arrS[i]), Upper)
 		}
 	}
-	return Join(arrS)
+	fmt.Printf("%qv\n", stack)
+	return Join(stack)
 }
 
 func parseMod(s string) int {
@@ -66,12 +76,13 @@ func isMod(s string) bool {
 	return re1.MatchString(s) || re2.MatchString(s)
 }
 
-func ApplyMod(arrS []string, i, count int, fn func(string) string) {
-	if count > i {
-		count = i
+func ApplyMod(stack []string, count int, fn func(string) string) {
+	if count > len(stack) {
+		count = len(stack)
 	}
-	for j := 1; j <= count; j++ {
-		arrS[i-j] = fn(arrS[i-j])
+	for i := 0; i < count; i++ {
+		end := len(stack) - 1
+		stack[end-i] = fn(stack[end-i])
 	}
 }
 
@@ -80,22 +91,33 @@ func Join(slice []string) string {
 	result := ""
 
 	for i := 0; i < len(slice); i++ {
-		if !isMod(slice[i]) {
-			if i != len(slice)-1 && Lower(slice[i]) == "a" && startWithVowel(Lower(slice[i+1])) {
-				slice[i] = slice[i]+"n"
-			}
-			out = append(out, slice[i])
-		}
-	}
 
+		if i != len(slice)-1 && Lower(slice[i]) == "a" && startWithVowel(Lower(slice[i+1])) {
+			slice[i] = slice[i] + "n"
+		}
+		out = append(out, slice[i])
+
+	}
+	foundSingleQuote := 0
 	for i, str := range out {
-		if isPunctuation(str) && puncAlone(str) {
+		if isPunctuation(str) && puncAlone(str) && i > 0 && !isPunctuation(out[i-1]) {
 			result = result[:len(result)-1]
 		}
-		result += str
-		if i != len(out)-1 && str != "'" && !containQuote(out[i+1]) {
-			result += " "
+		if str == "'" {
+			foundSingleQuote++
 		}
+
+		result += str + " "
+		if i == len(out)-1 || foundSingleQuote == 1 && (strings.Contains(out[i+1], "'") || str == "'") {
+			result = result[:len(result)-1]
+		}
+		if foundSingleQuote == 2 {
+			foundSingleQuote = 0
+		}
+
+	}
+	if !strings.Contains(out[len(out)-1], "\n") {
+		result += "\n"
 	}
 	return result
 }
@@ -142,6 +164,15 @@ func Split(s string) []string {
 					break
 				}
 			}
+		} else if s[i] == '\n' && i < len(s)-1 {
+			for i+1 < len(s) {
+				i++
+				if s[i] != '\n' {
+					arr = append(arr, s[wordStart:i])
+					wordStart = i
+					break
+				}
+			}
 		} else {
 			i++
 		}
@@ -169,15 +200,6 @@ func puncAlone(s string) bool {
 		}
 	}
 	return true
-}
-
-func containQuote(s string) bool {
-	for _, c := range s {
-		if c == '\'' {
-			return true
-		}
-	}
-	return false
 }
 
 func startWithVowel(s string) bool {
