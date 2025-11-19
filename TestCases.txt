@@ -15,3 +15,6 @@ Punctuation tests(low) are . . . kinda boring, what do you think?
 
 // 5
 LIMIT USER INPUT
+
+//6
+HELLO fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 101 (bin) )

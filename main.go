@@ -28,7 +28,7 @@ func main() {
 	if !strings.Contains(string(output[len(output)-1]), "\n") {
 		output += "\n"
 	}
-	
+
 	file, err := os.Create(os.Args[2])
 	if err != nil {
 		panic(err)

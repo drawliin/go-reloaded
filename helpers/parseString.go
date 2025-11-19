@@ -9,18 +9,17 @@ import (
 
 func ParseString(s string) string {
 	arrS := Split(s)
-	fmt.Printf("%qv\n", arrS) ///////////////
+	fmt.Printf("%q\n", arrS) ///////////////
 	stack := []string{}
 	for i := 0; i < len(arrS); i++ {
 		if i == 0 && isMod(arrS[i]) {
 			continue
 		}
-		///////////////////
+
 		if strings.HasPrefix(arrS[i], "(") && strings.HasSuffix(arrS[i], ")") {
-			arrS[i] = "("+ParseString(arrS[i][1:len(arrS[i])-1])+")"
-			fmt.Println("value: ", arrS[i])
+			arrS[i] = "(" + ParseString(arrS[i][1:len(arrS[i])-1]) + ")"
 		}
-		///////////////////
+
 		if !isMod(arrS[i]) {
 			stack = append(stack, arrS[i])
 		}
@@ -39,7 +38,7 @@ func ParseString(s string) string {
 			ApplyMod(stack, parseMod(arrS[i]), Upper)
 		}
 	}
-	fmt.Printf("%qv\n", stack)
+	fmt.Printf("%q\n", stack) //////////////////
 	return Join(stack)
 }
 
@@ -104,6 +103,7 @@ func Join(slice []string) string {
 		out = append(out, slice[i])
 
 	}
+
 	foundSingleQuote := 0
 	for i, str := range out {
 
@@ -113,8 +113,8 @@ func Join(slice []string) string {
 			!isPunctuation(out[i-1]) {
 			result = result[:len(result)-1]
 		}
-
 		result += str
+
 		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
 			result += " "
 		}
@@ -124,12 +124,12 @@ func Join(slice []string) string {
 		}
 
 		if foundSingleQuote == 1 {
-			if strings.Contains(str, "'") {
-				if quoteAtTheEnd(str) {
-					result = result[:len(result)-1]
-				}
+			if str == "'" {
+				result = result[:len(result)-1]
+				continue
 			}
-			if !strings.Contains(str, "'") && strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
+
+			if strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
 				result = result[:len(result)-1]
 			}
 		}
@@ -174,7 +174,7 @@ func Split(s string) []string {
 					break
 				}
 			}
-		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' || s[i] == '\'' {
+		} else if s[i] == ',' || s[i] == ';' || s[i] == ':' {
 			arr = append(arr, s[wordStart:i+1])
 			wordStart = i + 1
 			i = wordStart
@@ -196,18 +196,30 @@ func Split(s string) []string {
 					break
 				}
 			}
-		} else if s[i] == '\n' && i < len(s)-1 {
+		} else if s[i] == '\'' {
+			if s[wordStart:i] != "" {
+				arr = append(arr, s[wordStart:i])
+				wordStart = i
+			} else {
+				i++
+			}
+		} else if s[i] == '\n' {
 			if s[wordStart:i] != "" {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
 			}
-			for i+1 < len(s) {
-				i++
-				if s[i] != '\n' {
-					arr = append(arr, s[wordStart:i])
-					wordStart = i
-					break
+			
+			if i < len(s)-1 {
+				for i+1 < len(s) {
+					i++
+					if s[i] != '\n' {
+						arr = append(arr, s[wordStart:i])
+						wordStart = i
+						break
+					}
 				}
+			} else {
+				i++
 			}
 		} else {
 			i++
@@ -246,11 +258,3 @@ func startWithVowel(s string) bool {
 	}
 	return false
 }
-
-func quoteAtTheEnd(s string) bool {
-	if s[len(s)-1] == '\'' {
-		return true
-	}
-	return false
-}
-
