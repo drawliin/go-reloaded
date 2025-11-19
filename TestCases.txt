@@ -7,5 +7,11 @@ A (hex) //check spaces at the end
 // 2
 hello (CAP, (low) 2)
 
+//3
+remove panic
+
+//4
+
+Punctuation tests(low) are . . . kinda boring, what do you think? 
 
 

@@ -150,6 +150,10 @@ func Split(s string) []string {
 			wordStart = i + 1
 			i = wordStart
 		} else if s[i] == '(' {
+			if s[wordStart:i] != "" {
+				arr = append(arr, s[wordStart:i])
+				wordStart = i
+			}
 			for i+1 < len(s) {
 				i++
 				if s[i] == ')' {
