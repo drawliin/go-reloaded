@@ -109,7 +109,7 @@ func Join(slice []string) string {
 		}
 		
 		result += str
-		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
+		if i < len(out)-1 && !strings.Contains(str, "\n") && !ContainsOnly(out[i+1], '\n') {
 			result += " "
 		}
 		
@@ -234,4 +234,13 @@ func quoteAtTheEnd(s string) bool {
 		return true
 	}
 	return false
+}
+
+func ContainsOnly(s string, char rune) bool {
+	for _, c := range s {
+		if c != char {
+			return false
+		}
+	}
+	return true
 }

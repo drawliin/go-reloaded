@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	helper "project1/helpers"
+	"project1/helpers"
 )
 
 func main() {

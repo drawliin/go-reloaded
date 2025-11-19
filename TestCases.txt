@@ -4,5 +4,8 @@ Punctuation tests are... kinda boring, what do you think?
 
 A (hex) //check spaces at the end
 
+// 2
+hello (CAP, (low) 2)
+
 
 
