@@ -288,7 +288,7 @@ func spaceDots(s string) bool {
 }
 
 // func isFloat(arr []string, i int, punc string) bool {
-// 	if strings.Contains(punc, ) && i > 0 && i < len(arr)-1 {
+// 	if strings.Contains(punc, ".") && i > 0 && i < len(arr)-1 {
 // 		if (arr[i-1] >= "0" && arr[i-1] <= "9") && (arr[i+1] >= "0" && arr[i+1] <= "9") {
 // 			return true
 // 		}
