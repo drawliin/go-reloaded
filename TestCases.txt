@@ -1,11 +1,11 @@
 // 1
-Punctuation tests are... kinda boring, what do you think? 
+Punctuation ,  are.    .. kinda boring, what do you think? 
 
 
 A (hex) //check spaces at the end
 
 // 2
-hello (CAP, (low) 2)
+HELLO fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 101 (bin) )
 
 //3
 remove panic
@@ -16,5 +16,20 @@ Punctuation tests(low) are . . . kinda boring, what do you think?
 // 5
 LIMIT USER INPUT
 
-//6
-HELLO fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 101 (bin) )
+// 6
+verify quotes' is (up, 10) it ''hello ' ''
+
+// 7
+test (up,       -6)
+
+// 8
+hey up) dfssdsd (up)
+
+// 9
+hey (up dfssdsd (up)
+
+// 10
+"fgrefe.txt"
+
+// 11
+i have 3.17

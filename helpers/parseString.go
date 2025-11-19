@@ -16,8 +16,12 @@ func ParseString(s string) string {
 			continue
 		}
 
-		if strings.HasPrefix(arrS[i], "(") && strings.HasSuffix(arrS[i], ")") {
-			arrS[i] = "(" + ParseString(arrS[i][1:len(arrS[i])-1]) + ")"
+		if ValidBrackets(arrS[i]) {
+			if strings.HasPrefix(arrS[i], "(") && strings.HasSuffix(arrS[i], ")") {
+				arrS[i] = "(" + ParseString(arrS[i][1:len(arrS[i])-1]) + ")"
+			}
+		} else if strings.HasPrefix(arrS[i], "(") {
+			arrS[i] = "(" + ParseString(arrS[i][1:])
 		}
 
 		if !isMod(arrS[i]) {
@@ -107,12 +111,16 @@ func Join(slice []string) string {
 	foundSingleQuote := 0
 	for i, str := range out {
 
-		if isPunctuation(str) &&
-			puncAlone(str) &&
-			i > 0 &&
-			!isPunctuation(out[i-1]) {
+		if spaceDots(str) ||
+			(isPunctuation(str) &&
+				puncAlone(str) &&
+				i > 0 &&
+				!isPunctuation(out[i-1])) {
 			result = result[:len(result)-1]
 		}
+
+		///
+
 		result += str
 
 		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
@@ -208,7 +216,7 @@ func Split(s string) []string {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
 			}
-			
+
 			if i < len(s)-1 {
 				for i+1 < len(s) {
 					i++
@@ -257,4 +265,21 @@ func startWithVowel(s string) bool {
 		}
 	}
 	return false
+}
+
+func spaceDots(s string) bool {
+	validExt := map[string]bool{
+		"txt": true, "png": true, "jpg": true, "jpeg": true, "json": true,
+		"go": true, "js": true, "ts": true, "html": true, "css": true,
+		"pdf": true, "xml": true, "zip": true,
+	}
+	res := ""
+	for _, c := range s {
+		if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') {
+			res += string(c)
+		} else {
+			break
+		}
+	}
+	return validExt[Lower(res)]
 }
