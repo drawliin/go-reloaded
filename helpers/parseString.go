@@ -15,6 +15,12 @@ func ParseString(s string) string {
 		if i == 0 && isMod(arrS[i]) {
 			continue
 		}
+		///////////////////
+		if strings.HasPrefix(arrS[i], "(") && strings.HasSuffix(arrS[i], ")") {
+			arrS[i] = "("+ParseString(arrS[i][1:len(arrS[i])-1])+")"
+			fmt.Println("value: ", arrS[i])
+		}
+		///////////////////
 		if !isMod(arrS[i]) {
 			stack = append(stack, arrS[i])
 		}
@@ -133,9 +139,7 @@ func Join(slice []string) string {
 		}
 
 	}
-	if !strings.Contains(out[len(out)-1], "\n") {
-		result += "\n"
-	}
+
 	return result
 }
 
@@ -154,9 +158,16 @@ func Split(s string) []string {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
 			}
+			nest := 1
 			for i+1 < len(s) {
 				i++
+				if s[i] == '(' {
+					nest++
+				}
 				if s[i] == ')' {
+					nest--
+				}
+				if nest == 0 {
 					arr = append(arr, s[wordStart:i+1])
 					wordStart = i + 1
 					i = wordStart

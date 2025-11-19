@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
+
 	helper "project1/helpers"
 )
 
@@ -23,6 +25,10 @@ func main() {
 	}
 
 	output := helper.ParseString(string(inputFile))
+	if !strings.Contains(string(output[len(output)-1]), "\n") {
+		output += "\n"
+	}
+	
 	file, err := os.Create(os.Args[2])
 	if err != nil {
 		panic(err)
