@@ -100,19 +100,19 @@ func Join(slice []string) string {
 	}
 	foundSingleQuote := 0
 	for i, str := range out {
-		
+
 		if isPunctuation(str) &&
-		puncAlone(str) &&
-		i > 0 &&
-		!isPunctuation(out[i-1]) {
+			puncAlone(str) &&
+			i > 0 &&
+			!isPunctuation(out[i-1]) {
 			result = result[:len(result)-1]
 		}
-		
+
 		result += str
-		if i < len(out)-1 && !strings.Contains(str, "\n") && !ContainsOnly(out[i+1], '\n') {
+		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
 			result += " "
 		}
-		
+
 		if strings.Contains(str, "'") {
 			foundSingleQuote++
 		}
@@ -186,6 +186,10 @@ func Split(s string) []string {
 				}
 			}
 		} else if s[i] == '\n' && i < len(s)-1 {
+			if s[wordStart:i] != "" {
+				arr = append(arr, s[wordStart:i])
+				wordStart = i
+			}
 			for i+1 < len(s) {
 				i++
 				if s[i] != '\n' {
@@ -211,7 +215,6 @@ func isPunctuation(s string) bool {
 	default:
 		return false
 	}
-
 }
 
 func puncAlone(s string) bool {
@@ -240,11 +243,3 @@ func quoteAtTheEnd(s string) bool {
 	return false
 }
 
-func ContainsOnly(s string, char rune) bool {
-	for _, c := range s {
-		if c != char {
-			return false
-		}
-	}
-	return true
-}
