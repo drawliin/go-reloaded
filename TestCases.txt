@@ -15,6 +15,7 @@ Punctuation tests(low) are . . . kinda boring, what do you think?
 
 // 5
 LIMIT USER INPUT
+check output file
 
 // 6
 verify quotes' is (up, 10) it ''hello ' ''
@@ -36,4 +37,5 @@ hh kk mm, .. 55 (up)
 
 // 11
 i have 3.17
+
 
