@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 func ParseString(s string) string {
@@ -89,9 +90,15 @@ func ApplyMod(stack []string, count int, fn func(string) string) {
 	if count > len(stack) {
 		count = len(stack)
 	}
-	for i := 0; i < count; i++ {
-		end := len(stack) - 1
-		stack[end-i] = fn(stack[end-i])
+	end := len(stack) - 1
+	applied := 0
+	pos := end
+	for pos >= 0 && applied < count {
+		if hasLetter(stack[pos]) {
+			stack[pos] = fn(stack[pos])
+			applied++
+		}
+		pos--
 	}
 }
 
@@ -119,8 +126,6 @@ func Join(slice []string) string {
 			result = result[:len(result)-1]
 		}
 
-		///
-
 		result += str
 
 		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
@@ -145,9 +150,7 @@ func Join(slice []string) string {
 		if foundSingleQuote == 2 {
 			foundSingleQuote = 0
 		}
-
 	}
-
 	return result
 }
 
@@ -292,3 +295,12 @@ func spaceDots(s string) bool {
 // 	}
 // 	return false
 // }
+
+func hasLetter(s string) bool {
+	for _, c := range s {
+		if unicode.IsLetter(c) {
+			return true
+		}
+	}
+	return false
+}
