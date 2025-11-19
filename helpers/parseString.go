@@ -108,7 +108,10 @@ func Join(slice []string) string {
 			result = result[:len(result)-1]
 		}
 		
-		result += str + " "
+		result += str
+		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
+			result += " "
+		}
 		
 		if strings.Contains(str, "'") {
 			foundSingleQuote++
