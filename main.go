@@ -32,7 +32,7 @@ func main() {
 
 	file, err := os.Create(os.Args[2])
 	if err != nil {
-		fmt.Printf("%s\n")
+		fmt.Printf("%s\n", err)
 		return
 	}
 	file.WriteString(output)
