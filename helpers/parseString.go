@@ -128,7 +128,10 @@ func Join(slice []string) string {
 			(isPunctuation(str) &&
 				puncAlone(str) &&
 				i > 0 &&
-				!isPunctuation(out[i-1])) {
+				!isPunctuation(out[i-1])) ||
+			(i > 0 &&
+				strings.ContainsAny(out[i-1], "!?") &&
+				containsOnlyExclOrInterr(str)) {
 			result = result[:len(result)-1]
 		}
 
@@ -143,7 +146,7 @@ func Join(slice []string) string {
 		}
 
 		if foundSingleQuote == 1 {
-			if str == "'"{
+			if str == "'" {
 				result = result[:len(result)-1]
 				continue
 			}
@@ -298,6 +301,13 @@ func hasLetter(s string) bool {
 		if unicode.IsLetter(c) {
 			return true
 		}
+	}
+	return false
+}
+
+func containsOnlyExclOrInterr(s string) bool {
+	if s[0] == '!' || s[0] == '?' {
+		return true
 	}
 	return false
 }
