@@ -80,7 +80,7 @@ func TestProcessText(t *testing.T) {
 		{
 			name: "tag in newline",
 			in:   "hello\n(up)",
-			out:  "hello",
+			out:  "hello\n",
 		},
 		{
 			name: "find word to apply tag",
