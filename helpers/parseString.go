@@ -124,8 +124,7 @@ func Join(slice []string) string {
 	foundSingleQuote := 0
 	for i, str := range out {
 
-		if spaceDots(str) ||
-			(isPunctuation(str) &&
+		if (isPunctuation(str) &&
 				puncAlone(str) &&
 				i > 0 &&
 				!isPunctuation(out[i-1])) ||
@@ -277,23 +276,6 @@ func startWithVowel(s string) bool {
 		}
 	}
 	return false
-}
-
-func spaceDots(s string) bool {
-	validExt := map[string]bool{
-		"txt": true, "png": true, "jpg": true, "jpeg": true, "json": true,
-		"go": true, "js": true, "ts": true, "html": true, "css": true,
-		"pdf": true, "xml": true, "zip": true,
-	}
-	res := ""
-	for _, c := range s {
-		if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') {
-			res += string(c)
-		} else {
-			break
-		}
-	}
-	return validExt[Lower(res)]
 }
 
 func hasLetter(s string) bool {
