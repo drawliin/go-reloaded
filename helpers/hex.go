@@ -37,5 +37,5 @@ func Hex(s string) string {
 		}
 		num = num*16 + uint64(d)
 	}
-	return sign+strconv.FormatUint(num, 10)
+	return sign + strconv.FormatUint(num, 10)
 }
