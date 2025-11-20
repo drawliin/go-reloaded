@@ -97,6 +97,9 @@ func ApplyMod(stack []string, count int, fn func(string) string) {
 	applied := 0
 	pos := end
 	for pos >= 0 && applied < count {
+		if strings.Contains(stack[pos], "\n") {
+			break
+		}
 		if hasLetter(stack[pos]) {
 			stack[pos] = fn(stack[pos])
 			applied++
