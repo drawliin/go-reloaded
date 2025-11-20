@@ -72,6 +72,21 @@ func TestProcessText(t *testing.T) {
 			in:   "It was 1E (hex) files , added in 10 (bin) seconds (up, 2) !",
 			out:  "It was 30 files, added IN 2 SECONDS!",
 		},
+		{
+			name: "opened (",
+			in:   "hey up) dfssdsd (up)",
+			out:  "hey up) DFSSDSD",
+		},
+		{
+			name: "tag in newline",
+			in:   "hello\n(up)",
+			out:  "hello",
+		},
+		{
+			name: "find word to apply tag",
+			in:   "hh kk mm, .. 55 (up)",
+			out:  "hh kk MM, .. 55",
+		},
 	}
 
 	for _, tt := range tests {
