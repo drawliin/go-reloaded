@@ -140,12 +140,12 @@ func Join(slice []string) string {
 		}
 
 		if foundSingleQuote == 1 {
-			if str == "'" {
+			if str == "'"{
 				result = result[:len(result)-1]
 				continue
 			}
 
-			if strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
+			if i < len(out)-1 && strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
 				result = result[:len(result)-1]
 			}
 		}
