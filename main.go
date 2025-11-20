@@ -21,7 +21,8 @@ func main() {
 	}
 
 	if !helper.CheckExtension(os.Args[2]) {
-		panic("Invalid Output File")
+		fmt.Printf("Invalid Output File\n")
+		return
 	}
 
 	output := helper.ParseString(string(inputFile))
@@ -31,7 +32,8 @@ func main() {
 
 	file, err := os.Create(os.Args[2])
 	if err != nil {
-		panic(err)
+		fmt.Printf("%s\n")
+		return
 	}
 	file.WriteString(output)
 }

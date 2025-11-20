@@ -50,7 +50,7 @@ func ParseString(s string) string {
 func parseMod(s string) int {
 	num := ""
 	for _, c := range s {
-		if c >= '0' && c <= '9' {
+		if (c >= '0' && c <= '9') || c == '-' {
 			num += string(c)
 		}
 	}
@@ -63,9 +63,9 @@ func parseMod(s string) int {
 
 func checkMod(s string) (bool, bool, bool, bool, bool) {
 	hex, bin, cap, low, up := false, false, false, false, false
-	lowMatch := regexp.MustCompile(`^\(low(,\s*\d+)?\)$`)
-	upMatch := regexp.MustCompile(`^\(up(,\s*\d+)?\)$`)
-	capMatch := regexp.MustCompile(`^\(cap(,\s*\d+)?\)$`)
+	lowMatch := regexp.MustCompile(`^\(low(,\s*\-?\d+)?\)$`)
+	upMatch := regexp.MustCompile(`^\(up(,\s*\-?\d+)?\)$`)
+	capMatch := regexp.MustCompile(`^\(cap(,\s*\-?\d+)?\)$`)
 	if s == "(hex)" {
 		hex = true
 	} else if s == "(bin)" {
@@ -81,7 +81,7 @@ func checkMod(s string) (bool, bool, bool, bool, bool) {
 }
 
 func isMod(s string) bool {
-	re1 := regexp.MustCompile(`^\((low|cap|up)(,\s*\d+)?\)$`)
+	re1 := regexp.MustCompile(`^\((low|cap|up)(,\s*\-?\d+)?\)$`)
 	re2 := regexp.MustCompile(`^\((hex|bin)\)$`)
 	return re1.MatchString(s) || re2.MatchString(s)
 }
@@ -89,6 +89,9 @@ func isMod(s string) bool {
 func ApplyMod(stack []string, count int, fn func(string) string) {
 	if count > len(stack) {
 		count = len(stack)
+	}
+	if count < 0 {
+		count = 0
 	}
 	end := len(stack) - 1
 	applied := 0
@@ -286,15 +289,6 @@ func spaceDots(s string) bool {
 	}
 	return validExt[Lower(res)]
 }
-
-// func isFloat(arr []string, i int, punc string) bool {
-// 	if strings.Contains(punc, ".") && i > 0 && i < len(arr)-1 {
-// 		if (arr[i-1] >= "0" && arr[i-1] <= "9") && (arr[i+1] >= "0" && arr[i+1] <= "9") {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
 
 func hasLetter(s string) bool {
 	for _, c := range s {

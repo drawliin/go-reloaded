@@ -1,24 +1,41 @@
 package helper
 
-import "strconv"
+import (
+	"fmt"
+	"math"
+	"strconv"
+)
 
-func hexToDecimal(c rune) int {
+func hexToDecimal(c rune) (int, bool) {
 	switch {
 	case c >= '0' && c <= '9':
-		return int(c - '0')
+		return int(c - '0'), false
 	case c >= 'a' && c <= 'f':
-		return int(c - 'a' + 10)
+		return int(c - 'a' + 10), false
 	case c >= 'A' && c <= 'F':
-		return int(c - 'A' + 10)
+		return int(c - 'A' + 10), false
 	default:
-		panic("Invalid hex caracter")
+		return 0, true
 	}
 }
 
 func Hex(s string) string {
-	num := 0
-	for _, c := range s {
-		num = num*16 + hexToDecimal(c)
+	var num uint64 = 0
+	sign := ""
+	if s[0] == '-' {
+		s = s[1:]
+		sign = "-"
 	}
-	return strconv.Itoa(num)
+	for _, c := range s {
+		d, err := hexToDecimal(c)
+		if err {
+			return s
+		}
+		if num > (math.MaxUint64-uint64(d))/16 {
+			fmt.Printf("Hexadecimal Overflowing...\n")
+			return s
+		}
+		num = num*16 + uint64(d)
+	}
+	return sign+strconv.FormatUint(num, 10)
 }
