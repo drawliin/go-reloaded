@@ -149,7 +149,7 @@ func Join(slice []string) string {
 		}
 
 		if foundSingleQuote == 1 {
-			if str == "'" {
+			if i < len(out)-1 && str == "'" {
 				result = result[:len(result)-1]
 				continue
 			}
