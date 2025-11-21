@@ -63,9 +63,9 @@ func parseMod(s string) int {
 
 func checkMod(s string) (bool, bool, bool, bool, bool) {
 	hex, bin, cap, low, up := false, false, false, false, false
-	lowMatch := regexp.MustCompile(`^\(low(,\s*\-?\d+)?\)$`)
-	upMatch := regexp.MustCompile(`^\(up(,\s*\-?\d+)?\)$`)
-	capMatch := regexp.MustCompile(`^\(cap(,\s*\-?\d+)?\)$`)
+	lowMatch := regexp.MustCompile(`^\(low(\s*,\s*\-?\d+)?\)$`)
+	upMatch := regexp.MustCompile(`^\(up(\s*,\s*\-?\d+)?\)$`)
+	capMatch := regexp.MustCompile(`^\(cap(\s*,\s*\-?\d+)?\)$`)
 	if s == "(hex)" {
 		hex = true
 	} else if s == "(bin)" {
@@ -81,7 +81,7 @@ func checkMod(s string) (bool, bool, bool, bool, bool) {
 }
 
 func isMod(s string) bool {
-	re1 := regexp.MustCompile(`^\((low|cap|up)(,\s*\-?\d+)?\)$`)
+	re1 := regexp.MustCompile(`^\((low|cap|up)(\s*,\s*\-?\d+)?\)$`)
 	re2 := regexp.MustCompile(`^\((hex|bin)\)$`)
 	return re1.MatchString(s) || re2.MatchString(s)
 }
@@ -134,14 +134,17 @@ func Join(slice []string) string {
 			result = result[:len(result)-1]
 		}
 
+		if strings.Contains(str, "\n") {
+			foundSingleQuote = 0
+		}
 		if strings.Contains(str, "'") {
 			foundSingleQuote++
 		}
-
 		if foundSingleQuote == 2 {
 			str = handleSecondQuote(str)
 			foundSingleQuote = 0
 		}
+
 		result += str
 
 		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
@@ -149,7 +152,7 @@ func Join(slice []string) string {
 		}
 
 		if foundSingleQuote == 1 {
-			if i < len(out)-1 && str == "'" {
+			if i < len(out)-1 && str == "'" { // to not trim the last char
 				result = result[:len(result)-1]
 				continue
 			}
@@ -302,7 +305,7 @@ func handleSecondQuote(s string) string {
 	result := ""
 	for i, c := range s {
 		result += string(c)
-		if c == '\'' && len(s) > 1 && i < len(s)-1 && !isPunctuation(s[i+1:]){
+		if c == '\'' && len(s) > 1 && i < len(s)-1 && !isPunctuation(s[i+1:]) {
 			result += " "
 		}
 	}

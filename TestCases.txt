@@ -5,7 +5,7 @@ Punctuation ,  are.    .. kinda boring, what do you think?
 A (hex) //check spaces at the end
 
 // 2
-fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 101 (bin) )
+fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 1010 (bin) )
 
 //4
 Punctuation Tests(low) are . . . kinda boring, what do you think? 
@@ -40,3 +40,29 @@ hh kk mm, . hh .. hh .. hh 55 (up, -1)
 // 14
 hello
 (up)
+
+'gggggggggg' ,'gggggggg'
+''' a '''
+I don't ,mind ' being 'here .
+a a a a
+' a ' , ' b ' ,
+aeag\n  ,
+??? !!! .
+word ,.!?:;
+hello !(up)! (low)! (up)!
+1A (hex) 2FF (hex) Z111 (hex) 01 (hex)
+a aa a oo a ii a uu a hh a ee
+, ' test . '...
+hello (fakeTag) (fakeTag, 5)
+negative (cap, -3)
+emoji ✅ !
+café ... 🤯 🚀, 'hello' '你好' ' an привет'
+' hello , world ! ' (up, 2)
+fefefefSSZSZ (cap)
+a 'a, a ("a
+' uhef ' '  dfd'
+hello,world
+
+hDDy(UeeP (low))
+HEL,LO  ,,,,  (low)
+''''''''''''''''''
