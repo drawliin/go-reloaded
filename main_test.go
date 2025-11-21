@@ -85,12 +85,27 @@ func TestProcessText(t *testing.T) {
 		{
 			name: "find word to apply tag",
 			in:   "hh kk mm, .. 55 (up)",
-			out:  "hh kk MM, .. 55",
+			out:  "hh kk MM,.. 55",
 		},
 		{
 			name: "quotes",
 			in:   "'' ' hello hy'hi\n'''a'''\nhello' b'\n''bgthny''ffrfrf'''frgt '",
 			out:  "'' 'hello hy' hi\n'' 'a' ''\nhello 'b'\n'' bgthny '' ffrfrf '' 'frgt'",
+		},
+		{
+			name: "quote a",
+			in:   "''' a '''",
+			out:  "'' 'a' ''",
+		},
+		{
+			name: "puncs",
+			in:   "word ,. ! ?: ;",
+			out:  "word,.!?:;",
+		},
+		{
+			name: "emojis",
+			in:   "café ... 🤯 🚀, 'hello' '你好' ' an привет'",
+			out:  "café... 🤯 🚀, 'hello' '你好' 'an привет'",
 		},
 	}
 

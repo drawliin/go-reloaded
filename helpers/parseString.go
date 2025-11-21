@@ -127,7 +127,6 @@ func Join(slice []string) string {
 		if (isPunctuation(str) &&
 			puncAlone(str) &&
 			i > 0 &&
-			!isPunctuation(out[i-1]) &&
 			out[i-1] != "\n") ||
 			(i > 0 &&
 				strings.ContainsAny(out[i-1], "!?") &&
@@ -301,9 +300,9 @@ func containsOnlyExclOrInterr(s string) bool {
 
 func handleSecondQuote(s string) string {
 	result := ""
-	for _, c := range s {
+	for i, c := range s {
 		result += string(c)
-		if c == '\'' && len(s) > 1{
+		if c == '\'' && len(s) > 1 && i < len(s)-1 && !isPunctuation(s[i+1:]){
 			result += " "
 		}
 	}
