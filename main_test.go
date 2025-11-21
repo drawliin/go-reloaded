@@ -87,6 +87,11 @@ func TestProcessText(t *testing.T) {
 			in:   "hh kk mm, .. 55 (up)",
 			out:  "hh kk MM, .. 55",
 		},
+		{
+			name: "quotes",
+			in:   "'' ' hello hy'hi\n'''a'''\nhello' b'\n''bgthny''ffrfrf'''frgt '",
+			out:  "'' 'hello hy' hi\n'' 'a' ''\nhello 'b'\n'' bgthny '' ffrfrf '' 'frgt'",
+		},
 	}
 
 	for _, tt := range tests {

@@ -125,23 +125,27 @@ func Join(slice []string) string {
 	for i, str := range out {
 
 		if (isPunctuation(str) &&
-				puncAlone(str) &&
-				i > 0 &&
-				!isPunctuation(out[i-1])) ||
+			puncAlone(str) &&
+			i > 0 &&
+			!isPunctuation(out[i-1])) ||
 			(i > 0 &&
 				strings.ContainsAny(out[i-1], "!?") &&
 				containsOnlyExclOrInterr(str)) {
 			result = result[:len(result)-1]
 		}
+		
+		if strings.Contains(str, "'") {
+			foundSingleQuote++
+		}
 
+		if foundSingleQuote == 2 {
+			str = handleSecondQuote(str)
+			foundSingleQuote = 0
+		}
 		result += str
 
 		if i < len(out)-1 && !strings.Contains(str, "\n") && !strings.Contains(out[i+1], "\n") {
 			result += " "
-		}
-
-		if strings.Contains(str, "'") {
-			foundSingleQuote++
 		}
 
 		if foundSingleQuote == 1 {
@@ -150,13 +154,9 @@ func Join(slice []string) string {
 				continue
 			}
 
-			if i < len(out)-1 && strings.Contains(out[i+1], "'") && len(out[i+1]) == 1 {
+			if i < len(out)-1 && strings.HasPrefix(out[i+1], "'") {
 				result = result[:len(result)-1]
 			}
-		}
-
-		if foundSingleQuote == 2 {
-			foundSingleQuote = 0
 		}
 	}
 	return result
@@ -292,4 +292,15 @@ func containsOnlyExclOrInterr(s string) bool {
 		return true
 	}
 	return false
+}
+
+func handleSecondQuote(s string) string {
+	result := ""
+	for _, c := range s {
+		result += string(c)
+		if c == '\'' && len(s) > 1 {
+			result += " "
+		}
+	}
+	return result
 }
