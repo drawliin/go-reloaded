@@ -127,13 +127,14 @@ func Join(slice []string) string {
 		if (isPunctuation(str) &&
 			puncAlone(str) &&
 			i > 0 &&
-			!isPunctuation(out[i-1])) ||
+			!isPunctuation(out[i-1]) &&
+			out[i-1] != "\n") ||
 			(i > 0 &&
 				strings.ContainsAny(out[i-1], "!?") &&
 				containsOnlyExclOrInterr(str)) {
 			result = result[:len(result)-1]
 		}
-		
+
 		if strings.Contains(str, "'") {
 			foundSingleQuote++
 		}
@@ -198,6 +199,10 @@ func Split(s string) []string {
 			wordStart = i + 1
 			i = wordStart
 		} else if s[i] == '.' && i < len(s)-1 {
+			if s[wordStart:i] != "" {
+				arr = append(arr, s[wordStart:i])
+				wordStart = i
+			}
 			for i+1 < len(s) {
 				i++
 				if s[i] != '.' {
@@ -298,7 +303,7 @@ func handleSecondQuote(s string) string {
 	result := ""
 	for _, c := range s {
 		result += string(c)
-		if c == '\'' && len(s) > 1 {
+		if c == '\'' && len(s) > 1{
 			result += " "
 		}
 	}
