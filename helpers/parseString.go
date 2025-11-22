@@ -124,13 +124,10 @@ func Join(slice []string) string {
 	foundSingleQuote := 0
 	for i, str := range out {
 
-		if (isPunctuation(str) &&
+		if isPunctuation(str) &&
 			puncAlone(str) &&
 			i > 0 &&
-			out[i-1] != "\n") ||
-			(i > 0 &&
-				strings.ContainsAny(out[i-1], "!?") &&
-				containsOnlyExclOrInterr(str)) {
+			out[i-1] != "\n" {
 			result = result[:len(result)-1]
 		}
 
@@ -175,7 +172,7 @@ func Split(s string) []string {
 			}
 			wordStart = i + 1
 			i = wordStart
-		} else if s[i] == '(' {
+		} else if s[i] == '(' && i < len(s)-1 {
 			if s[wordStart:i] != "" {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
@@ -188,6 +185,11 @@ func Split(s string) []string {
 				}
 				if s[i] == ')' {
 					nest--
+				}
+				if s[i] == '\n' {
+					arr = append(arr, s[wordStart:i])
+					wordStart = i
+					break
 				}
 				if nest == 0 {
 					arr = append(arr, s[wordStart:i+1])
@@ -229,23 +231,18 @@ func Split(s string) []string {
 			} else {
 				i++
 			}
-		} else if s[i] == '\n' {
+		} else if s[i] == '\n' && i < len(s)-1{
 			if s[wordStart:i] != "" {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
 			}
-
-			if i < len(s)-1 {
-				for i+1 < len(s) {
-					i++
-					if s[i] != '\n' {
-						arr = append(arr, s[wordStart:i])
-						wordStart = i
-						break
-					}
-				}
-			} else {
+			for i+1 < len(s) {
 				i++
+				if s[i] != '\n' {
+					arr = append(arr, s[wordStart:i])
+					wordStart = i
+					break
+				}
 			}
 		} else {
 			i++
@@ -290,13 +287,6 @@ func hasLetter(s string) bool {
 		if unicode.IsLetter(c) {
 			return true
 		}
-	}
-	return false
-}
-
-func containsOnlyExclOrInterr(s string) bool {
-	if s[0] == '!' || s[0] == '?' {
-		return true
 	}
 	return false
 }
