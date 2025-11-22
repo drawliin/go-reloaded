@@ -5,7 +5,7 @@ Punctuation ,  are.    .. kinda boring, what do you think?
 A (hex) //check spaces at the end
 
 // 2
-fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 1010 (bin) )
+dede fds gdsf gdf hgdf dfg (CAP,  (cap) (up) (low) 101 (bin) )
 
 //4
 Punctuation Tests(low) are . . . kinda boring, what do you think? 
@@ -66,3 +66,7 @@ hello,world
 hDDy(UeeP (low))
 HEL,LO  ,,,,  (low)
 '' ''
+
+hello (CAP) (LOW) (low)
+hello (Hey (low) (cap) (up) ghty[hey(CAP)(low)])
+hello {what(up)}

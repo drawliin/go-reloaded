@@ -111,7 +111,7 @@ func TestProcessText(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := helper.ParseString(tt.in)
+			got, _ := helper.ParseString(tt.in)
 			if got != tt.out {
 				t.Errorf("\nInput:    %q\nExpected: %q\nGot:      %q", tt.in, tt.out, got)
 			}

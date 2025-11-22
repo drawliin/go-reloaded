@@ -25,7 +25,10 @@ func main() {
 		return
 	}
 
-	output := helper.ParseString(string(inputFile))
+	output, stack := helper.ParseString(string(inputFile))
+	for helper.ContainsMod(stack) {
+		output, stack = helper.ParseString(output)
+	}
 	if !strings.Contains(string(output[len(output)-1]), "\n") {
 		output += "\n"
 	}

@@ -8,7 +8,7 @@ import (
 	"unicode"
 )
 
-func ParseString(s string) string {
+func ParseString(s string) (string, []string) {
 	arrS := Split(s)
 	fmt.Printf("%q\n", arrS) ///////////////
 	stack := []string{}
@@ -19,10 +19,12 @@ func ParseString(s string) string {
 
 		if ValidBrackets(arrS[i]) {
 			if strings.HasPrefix(arrS[i], "(") && strings.HasSuffix(arrS[i], ")") {
-				arrS[i] = "(" + ParseString(arrS[i][1:len(arrS[i])-1]) + ")"
+				output, _ := ParseString(arrS[i][1 : len(arrS[i])-1])
+				arrS[i] = "(" + output + ")"
 			}
 		} else if strings.HasPrefix(arrS[i], "(") {
-			arrS[i] = "(" + ParseString(arrS[i][1:])
+			output, _ := ParseString(arrS[i][1:])
+			arrS[i] = "(" + output
 		}
 
 		if !isMod(arrS[i]) {
@@ -44,7 +46,7 @@ func ParseString(s string) string {
 		}
 	}
 	fmt.Printf("%q\n", stack) //////////////////
-	return Join(stack)
+	return Join(stack), stack
 }
 
 func parseMod(s string) int {
@@ -231,7 +233,7 @@ func Split(s string) []string {
 			} else {
 				i++
 			}
-		} else if s[i] == '\n' && i < len(s)-1{
+		} else if s[i] == '\n' && i < len(s)-1 {
 			if s[wordStart:i] != "" {
 				arr = append(arr, s[wordStart:i])
 				wordStart = i
@@ -300,4 +302,13 @@ func handleSecondQuote(s string) string {
 		}
 	}
 	return result
+}
+
+func ContainsMod(arr []string) bool {
+	for _,c := range arr {
+		if isMod(c) {
+			return true
+		}
+	}
+	return false
 }
